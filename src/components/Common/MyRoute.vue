@@ -1,5 +1,10 @@
 <template>
-  <div class="route" v-for="item in content" :key="item.id">
+  <div
+    class="route"
+    v-for="item in content"
+    :key="item.id"
+    @click="toBlog(item)"
+  >
     <svg-icon :iconClass="item.iconClass" :width="item.width"></svg-icon>
     <div v-if="item.title">{{ item.title }}</div>
   </div>
@@ -7,7 +12,7 @@
 
 <script>
 import { toRefs } from "vue";
-
+import { useRouter } from "vue-router";
 export default {
   name: "myRoute",
   props: {
@@ -16,9 +21,14 @@ export default {
     },
   },
   setup(props) {
-    return {
-      ...toRefs(props),
+    const router = useRouter();
+    const toBlog = (item) => {
+      router.push({
+        path: item.path,
+      });
     };
+
+    return { toBlog, ...toRefs(props) };
   },
 };
 </script>

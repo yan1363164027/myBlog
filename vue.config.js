@@ -21,5 +21,16 @@ module.exports = defineConfig({
         // 注意： symbolId  在  <use xlink:href="#dl-icon-svg文件名" />
         symbolId: "dl-icon-[name]", // 将所有的.svg 集成到 symbol中，当使用 类名 icon-文件名
       });
+    config.module
+      .rule("md")
+      .test(/\.md/)
+      .use("vue-loader")
+      .loader("vue-loader")
+      .end()
+      .use("vue-markdown-loader")
+      .loader("vue-markdown-loader/lib/markdown-compiler")
+      .options({
+        raw: true,
+      });
   },
 });

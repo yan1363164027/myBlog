@@ -1,7 +1,12 @@
 <template>
-  <div id="head-wrapper">
+  <div id="head-wrapper" ref="myScroll">
     <div :class="scrollTop >= 20 ? 'backTop appear-cat' : 'backTop'">
-      <img src="../assets/image/scroll.png" alt="" srcset="" />
+      <img
+        src="../../assets/image/scroll.png"
+        alt=""
+        srcset=""
+        @click="backTop"
+      />
     </div>
     <div :class="scrollTop >= 20 ? 'header scrollTop' : 'header'">
       <div class="left"></div>
@@ -21,7 +26,7 @@ import { reactive, toRefs, ref } from "vue";
 import { onMounted } from "vue";
 import myRoute from "./MyRoute.vue";
 export default {
-  name: "header",
+  name: "myHead",
   components: {
     myRoute,
   },
@@ -29,8 +34,8 @@ export default {
     const header = {
       left: {},
       center: [
-        { id: 1, iconClass: "home", title: "首页" },
-        { id: 2, iconClass: "wenzhang", title: "博客" },
+        { id: 1, iconClass: "home", title: "首页", path: "/home" },
+        { id: 2, iconClass: "wenzhang", title: "博客", path: "/blog" },
         { id: 3, iconClass: "ziliao", title: "资料" },
         // { id: 4, icon: "icon-gitee", title: "github" },
       ],
@@ -54,6 +59,7 @@ export default {
       },
     };
     const scrollTop = ref(0);
+    let headWrapper = null;
     onMounted(() => {
       window.onscroll = function () {
         scrollTop.value =
@@ -61,11 +67,20 @@ export default {
           window.pageYOffset ||
           document.body.scrollTop;
       };
-      const headWrapper = document.querySelector("#head-wrapper");
+      headWrapper = document.querySelector("#head-wrapper");
     });
+
+    const backTop = () => {
+      if (scrollTop.value > 0) {
+        window.requestAnimationFrame(backTop);
+        window.scrollTo(0, scrollTop.value - scrollTop.value / 10);
+      }
+    };
+
     return {
       ...header,
       scrollTop,
+      backTop,
     };
   },
 };
@@ -100,7 +115,7 @@ export default {
       overflow: hidden;
       display: flex;
       flex-shrink: 0;
-      background-image: url("../assets/image/logo.png");
+      background-image: url("../../assets/image/logo.png");
       filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod='scale')";
       -moz-background-size: 100% 100%;
       background-size: 100% 100%;
@@ -138,7 +153,7 @@ export default {
     cursor: pointer;
   }
   .appear-cat {
-    top: 0px;
+    top: -20px;
     transition: top cubic-bezier(0.54, 1.09, 0.54, 1.01) 1s;
     animation: appearCat 2s infinite;
     z-index: 1000;

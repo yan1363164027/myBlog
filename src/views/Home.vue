@@ -12,7 +12,11 @@
               :key="index"
               :title="item"
             >
-              <svg-icon :iconClass="item"></svg-icon>
+              <svg-icon
+                :iconClass="item"
+                :width="svgIcon.width"
+                :cursor="svgIcon.cursor"
+              ></svg-icon>
             </template>
           </div>
           <svg-icon iconClass="arrowRight"></svg-icon>
@@ -22,40 +26,83 @@
     <div class="next-content">
       <div class="encourage-center">
         <Encourage :encourage="encourage"></Encourage>
-        <Encourage :myBlog="myBlog"></Encourage>
+        <Encourage :myBlog="myBlogInfo"></Encourage>
       </div>
       <div class="article">
         <div class="article-head">
-          <svg-icon :iconClass="yezi" :cursor="false"></svg-icon>文章
+          <svg-icon :iconClass="yezi" :cursor="false"></svg-icon>
+          <span>文章</span>
         </div>
+        <template
+          v-for="(articleDetail, index) in articleDetails"
+          :key="articleDetail.rlseTime"
+        >
+          <BlogCard
+            :articleDetail="articleDetail"
+            @click="jumpDetails(articleDetail)"
+          ></BlogCard>
+        </template>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import myRoute from "../components/MyRoute.vue";
-import Encourage from "../components/Encourage.vue";
+import myRoute from "../components/Common/MyRoute.vue";
+import Encourage from "../components/Home/Encourage.vue";
+import BlogCard from "../components/Home/BlogCard.vue";
+import { useRouter } from "vue-router";
+import { onMounted, reactive, ref } from "vue";
 export default {
   name: "Home",
   components: {
     myRoute,
     Encourage,
+    BlogCard,
   },
   setup() {
-    const svgArr = ["gitee", "github", "qq", "weixin"];
-    const encourage = "今天也要好好努力啊！";
-    const myBlog = {
-      count: 0,
-      time: 0,
-      lastestTime: 0,
+    const router = useRouter();
+    const svg = {
+      svgArr: ["gitee", "github", "qq", "weixin"],
+      svgIcon: {
+        width: 30,
+        cursor: true,
+      },
     };
+    const encourage = "今天又是充满希望的一天！";
+    const blog = reactive({
+      myBlogInfo: {
+        count: 5,
+        initTime: 1661910302619,
+        time: 0,
+        lastestTime: "2022-8-30",
+      },
+      articleDetails: [],
+    });
+    // 跳转至详情页
+    const jumpDetails = (detail) => {
+      router.addRoute({
+        path: `/${detail.name}`,
+        component: () => import(`../views/Blog/${detail.name}.vue`),
+      });
+      router.push({
+        path: `/${detail.name}`,
+      });
+    };
+
     const yezi = "yezi";
+    onMounted(() => {
+      let diff = Date.now() - blog.myBlogInfo.initTime;
+      blog.myBlogInfo.time = Math.ceil(diff / (1000 * 3600 * 24));
+      const arr = require("../assets/articleDetails");
+      blog.articleDetails.push(...arr.default.arr);
+    });
     return {
-      svgArr,
       encourage,
-      myBlog,
+      ...blog,
+      ...svg,
       yezi,
+      jumpDetails,
     };
   },
 };
@@ -63,9 +110,9 @@ export default {
 
 <style lang="less" scoped>
 .home {
-  position: absolute;
+  position: relative;
   left: 50%;
-  transform: translate(-50%);
+  transform: translateX(-50%);
   width: 1920px;
   max-width: 100%;
   height: auto;
@@ -115,7 +162,7 @@ export default {
   .next-content {
     position: relative;
     width: 100%;
-    height: 800px;
+    height: auto;
     margin-top: 400px;
     .encourage-center {
       width: 100%;
@@ -127,12 +174,12 @@ export default {
     .article {
       width: 1050px;
       margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       .article-head {
-        display: flex;
-        align-items: center;
         font-size: 18px;
-        font-family: "modern" !important;
-        width: 100%;
+        width: 90%;
         border-bottom: 1px dashed rgb(204, 204, 204);
       }
     }

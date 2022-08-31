@@ -2,9 +2,9 @@
   <div class="encourage">
     <h3 v-if="encourage">{{ encourage }}</h3>
     <h4 v-else>
-      文章数量：{{ myBlog.count }} 
-      最近更新时间：{{myBlog.lastestTime}} 
-      运行时长：{{myBlog.time}}
+      文章数量：{{ myBlog.count }} &nbsp;
+      最近更新时间：{{myBlog.lastestTime}} &nbsp;
+      运行时长：{{myBlog.time}}天
     </h4>
   </div>
 </template>
@@ -32,7 +32,7 @@ export default {
 .encourage {
   position: relative;
   margin: 20px 0;
-  width: 1000px;
+  width: 900px;
   height: 40px;
   padding: 20px;
   font-size: 20px;
