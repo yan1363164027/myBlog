@@ -25,6 +25,7 @@ export default {
     const toBlog = (item) => {
       router.push({
         path: item.path,
+        // name: 'home'
       });
     };
 

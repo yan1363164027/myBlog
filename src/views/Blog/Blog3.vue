@@ -6,11 +6,18 @@
 <script>
 import "github-markdown-css"; // markdown样式
 import "highlight.js/styles/github.css"; // 代码高亮
-import md from "../../md/Blog4.md";
+import { onMounted, ref } from "vue";
+import md from "../../md/Blog3.md";
 export default {
   name: "Blog",
   components: {
     md,
+  },
+  setup() {
+    onMounted(() => {
+      // const head = document.querySelector("#head-wrapper");
+      // head.scrollIntoView(true);
+    });
   },
 };
 </script>

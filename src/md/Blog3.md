@@ -10,10 +10,18 @@ class myPromise {
     this.state = "pending";
     this.result = null;
   }
+  resolve(val) {
+    this.state = "onFullfilled";
+    this.result = val;
+  }
+  reject(val) {
+    this.state = "rejectd";
+    this.result = val;
+  }
 }
 ```
 
-然后两个方法，接收值，并且状态只能改变一次
+然后promsie箭头函数有两个方法，接收值，并且状态只能改变一次
 
 ```js
 class myPromise {

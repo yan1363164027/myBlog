@@ -34,7 +34,7 @@ export default {
     const header = {
       left: {},
       center: [
-        { id: 1, iconClass: "home", title: "首页", path: "/home" },
+        { id: 1, iconClass: "home", title: "首页", path: "/" },
         { id: 2, iconClass: "wenzhang", title: "博客", path: "/blog" },
         { id: 3, iconClass: "ziliao", title: "资料" },
         // { id: 4, icon: "icon-gitee", title: "github" },
@@ -140,7 +140,7 @@ export default {
   .scrollTop {
     box-shadow: 5px 1px 1em 1px rgb(186, 186, 186);
     background-color: rgba(255, 255, 255, 0.9);
-    transition: box-shadow 0.5s, background-color 1s;
+    transition: box-shadow 0.5s, background-color 1s, ;
   }
   .backTop {
     position: fixed;
