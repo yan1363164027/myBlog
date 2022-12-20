@@ -1,5 +1,8 @@
 <template>
   <div class="home">
+    <div class="home-background-image">
+      <!-- <img src="@/assets/image/bg2.jpg" alt="" srcset=""> -->
+    </div>
     <div class="now-content">
       <img src="../assets/image/user-me.png" alt="" srcset="" />
       <div class="concat">
@@ -113,14 +116,34 @@ export default {
   position: relative;
   left: 50%;
   transform: translateX(-50%);
-  width: 1920px;
+  width: 2560px;
   max-width: 100%;
   height: auto;
-  background: url("../assets/image/bg1.jpg") no-repeat;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  padding-bottom: 100px;
+  .home-background-image {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    max-width: 2560px;
+    max-height: 1080px;
+    top: 0;
+    background: url("../assets/image/home.jpg") no-repeat;
+    background-position-x: center;
+    background-position-y: start;
+    // img{
+    //   width: 100%;
+    //   max-height: 1297px;
+    //   object-fit: contain;
+    //   position: absolute;
+    //   transform: translate(-50%,-50%);
+    //   top: 50%;
+    //   left: 50%;
+    // }
+  }
   .now-content {
     margin-top: 300px;
     position: relative;

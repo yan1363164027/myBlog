@@ -5,8 +5,14 @@
     :key="item.id"
     @click="toBlog(item)"
   >
-    <svg-icon :iconClass="item.iconClass" :width="item.width"></svg-icon>
-    <div v-if="item.title">{{ item.title }}</div>
+    <svg-icon
+      :iconClass="item.iconClass"
+      :width="item.width"
+      :title="item.title"
+    ></svg-icon>
+    <div v-if="item.title">
+      <span>{{ item.title }}</span>
+    </div>
   </div>
 </template>
 
@@ -23,10 +29,18 @@ export default {
   setup(props) {
     const router = useRouter();
     const toBlog = (item) => {
-      router.push({
-        path: item.path,
-        // name: 'home'
-      });
+      if (item.path) {
+        router.push({
+          path: item.path,
+          // name: 'home'
+        });
+      } else {
+        // 创建元素a, 打开github
+        let github = document.createElement("a");
+        github.setAttribute("href", item.url);
+        github.setAttribute("target", "_blank");
+        github.click();
+      }
     };
 
     return { toBlog, ...toRefs(props) };
@@ -35,7 +49,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .route {
-  width: 90px;
+  width: 120px;
+  margin: 0 5px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;

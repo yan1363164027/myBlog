@@ -25,8 +25,8 @@ export default {
 <style lang="less" scoped>
 .my-bottom {
   position: relative;
-  width: 1920px;
-  max-width: 100%;
+  width: 100%;
+  max-width:2560px;
   height: 300px;
   left: 50%;
   top: 100px;

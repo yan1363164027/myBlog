@@ -11,78 +11,99 @@
     <div :class="scrollTop >= 20 ? 'header scrollTop' : 'header'">
       <div class="left"></div>
       <div class="center">
-        <myRoute :content="center" />
+        <myRoute :content="header.center" />
       </div>
       <div class="right">
-        <myRoute :content="right.search" />
-        <myRoute :content="right.user" />
+        <myRoute :content="header.right.search" />
+        <div @click="changeMode">
+          <svg-icon
+            :iconClass="header.right.changeMode.iconClass"
+            :width="30"
+          ></svg-icon>
+        </div>
+        <myRoute :content="header.right.user" />
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { reactive, toRefs, ref } from "vue";
+<script setup>
+import { reactive, toRefs, ref, getCurrentInstance } from "vue";
 import { onMounted } from "vue";
 import myRoute from "./MyRoute.vue";
-export default {
-  name: "myHead",
-  components: {
-    myRoute,
-  },
-  setup() {
-    const header = {
-      left: {},
-      center: [
-        { id: 1, iconClass: "home", title: "首页", path: "/" },
-        { id: 2, iconClass: "wenzhang", title: "博客", path: "/blog" },
-        { id: 3, iconClass: "ziliao", title: "资料" },
-        // { id: 4, icon: "icon-gitee", title: "github" },
-      ],
-      right: {
-        search: [
-          {
-            id: 1,
-            iconClass: "search",
-            // title: "搜索",
-            width: 50,
-          },
-        ],
-        user: [
-          {
-            id: 1,
-            iconClass: "user",
-            // title: "用户",
-            width: 50,
-          },
-        ],
+const { appContext } = getCurrentInstance();
+const header = {
+  left: {},
+  center: [
+    { id: 1, iconClass: "home", title: "首页", path: "/" },
+    { id: 2, iconClass: "wenzhang", title: "博客", path: "/blog" },
+    // { id: 3, iconClass: "ziliao", title: "资料", path: null },
+    {
+      id: 4,
+      iconClass: "github",
+      title: "github",
+      path: null,
+      url: "https://github.com/yan1363164027?tab=repositories",
+    },
+    {
+      id: 5,
+      iconClass: "gitee",
+      title: "gitee",
+      path: null,
+      url: "https://gitee.com/yzx136",
+    },
+    {
+      id: 6,
+      iconClass: "write",
+      title: "写博客",
+      path: "/write",
+    },
+  ],
+  right: {
+    search: [
+      {
+        id: 1,
+        iconClass: "search",
+        // title: "搜索",
       },
-    };
-    const scrollTop = ref(0);
-    let headWrapper = null;
-    onMounted(() => {
-      window.onscroll = function () {
-        scrollTop.value =
-          document.documentElement.scrollTop ||
-          window.pageYOffset ||
-          document.body.scrollTop;
-      };
-      headWrapper = document.querySelector("#head-wrapper");
-    });
-
-    const backTop = () => {
-      if (scrollTop.value > 0) {
-        window.requestAnimationFrame(backTop);
-        window.scrollTo(0, scrollTop.value - scrollTop.value / 10);
-      }
-    };
-
-    return {
-      ...header,
-      scrollTop,
-      backTop,
-    };
+    ],
+    user: [
+      {
+        id: 1,
+        iconClass: "user",
+        // title: "用户",
+      },
+    ],
+    changeMode: {
+      id: 1,
+      iconClass: "changeMode",
+      // title: "用户",
+    },
   },
+};
+const theme = ref("light");
+const scrollTop = ref(0);
+let headWrapper = null;
+const changeMode = () => {
+  theme.value = theme.value === "light" ? "dark" : "light";
+  console.log(99999);
+  appContext.$mitt.emit("changeMode", theme.value);
+};
+onMounted(() => {
+  window.onscroll = function () {
+    scrollTop.value =
+      document.documentElement.scrollTop ||
+      window.pageYOffset ||
+      document.body.scrollTop;
+  };
+  headWrapper = document.querySelector("#head-wrapper");
+});
+
+const backTop = () => {
+  if (scrollTop.value > 0) {
+    window.requestAnimationFrame(backTop);
+    window.scrollTo(0, scrollTop.value - scrollTop.value / 10);
+  }
 };
 </script>
 
@@ -92,6 +113,7 @@ export default {
   position: absolute;
   width: 100vw;
   max-width: 100%;
+  height: 100px;
   overflow: hidden;
   background-color: rgba(255, 255, 255, 1);
   .header {
@@ -99,7 +121,7 @@ export default {
     z-index: 2000;
     left: 50%;
     width: 100vw;
-    max-width: 1920px;
+    max-width: 2560px;
     transform: translateX(-50%);
     height: 100px;
     display: flex;
@@ -121,7 +143,6 @@ export default {
       background-size: 100% 100%;
     }
     .center {
-      width: 400px;
       height: 100%;
       display: flex;
       flex-direction: row;
@@ -140,7 +161,7 @@ export default {
   .scrollTop {
     box-shadow: 5px 1px 1em 1px rgb(186, 186, 186);
     background-color: rgba(255, 255, 255, 0.9);
-    transition: box-shadow 0.5s, background-color 1s, ;
+    transition: box-shadow 0.5s, background-color 1s;
   }
   .backTop {
     position: fixed;
@@ -153,7 +174,7 @@ export default {
     cursor: pointer;
   }
   .appear-cat {
-    top: -20px;
+    top: -250px;
     transition: top cubic-bezier(0.54, 1.09, 0.54, 1.01) 1s;
     animation: appearCat 2s infinite;
     z-index: 1000;
