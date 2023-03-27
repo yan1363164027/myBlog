@@ -4,11 +4,11 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
-    <title>Yzx'Blog</title>
+    <link rel="icon" href="<%= BASE_URL %>t.ico" />
+    <title>Yzx社区</title>
   </head>
   <body>
-    <script src="./utils/sakura.js"></script>
+    <!-- <script src="./utils/sakura.js"></script> -->
     <noscript>
       <strong
         >We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work
@@ -18,5 +18,20 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
+    <!-- <script>
+      let timer = null;
+      window.addEventListener("resize", () => {
+        if (!timer) {
+          timetr = setTimeout(() => {
+            let head = document.getElementsByTagName("head")[0];
+            const sakura = document.createElement("script");
+            sakura.src = "./utils/sakura.js";
+            head.appendChild(sakura);
+          }, 100);
+        } else {
+          clearTimeout(timer);
+        }
+      });
+    </script> -->
   </body>
 </html>

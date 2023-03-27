@@ -9,6 +9,7 @@
           }`
         : ''
     "
+    :title="title"
   >
     <use :xlink:href="iconName" />
   </svg>
@@ -35,6 +36,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    title:{
+      type: String,
+      default: ''
+    }
   },
   setup(props) {
     // 图标在 iconfont 中的名字

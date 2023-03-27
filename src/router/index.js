@@ -3,20 +3,41 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    name: "home",
-    component: () => import("../views/Home.vue"), // 主页
+    name: "UserCenter",
+    component: () => import("../views/UserCenter/UserCenter.vue"), // 个人中心
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: () => import("../views/LoginAndRegister/LoginAndRegister.vue"), // 登陆
+
   },
   {
     path: "/blog",
     name: "blog",
-    component: () => import("../views/Blog.vue"), // 博客
+    component: () => import("../views/BlogList/BlogList.vue"), // 博客
 
   },
   {
     path: "/write",
     name: "write",
-    component: () => import("../views/Write.vue"), // 写博客
+    component: () => import("../views/Blog/BlogWrite.vue"), // 写博客
   },
+  {
+    path: "/blogDetail",
+    name: "blogDetail",
+    component: () => import("../views/Blog/BlogDetail.vue"), // 博客详情
+  },
+  {
+    path: "/changeBlog",
+    name: "changeBlog",
+    component: () => import("../views/Blog/BlogChange.vue"), // 修改博客内容
+  },
+  {
+    path: "/*",
+    name: "404",
+    component: () => import("../views/404.vue"), // 修改博客内容
+  }
 ];
 
 const router = createRouter({

@@ -64,6 +64,7 @@ const header = {
       {
         id: 1,
         iconClass: "search",
+        width: 35,
         // title: "搜索",
       },
     ],
@@ -71,12 +72,14 @@ const header = {
       {
         id: 1,
         iconClass: "user",
+        width: 35,
         // title: "用户",
       },
     ],
     changeMode: {
       id: 1,
       iconClass: "changeMode",
+      width: 30,
       // title: "用户",
     },
   },
@@ -115,7 +118,7 @@ const backTop = () => {
   max-width: 100%;
   height: 100px;
   overflow: hidden;
-  background-color: rgba(255, 255, 255, 1);
+  background-color: #fff;
   .header {
     position: fixed;
     z-index: 2000;
@@ -129,7 +132,7 @@ const backTop = () => {
     justify-content: space-between;
     align-items: center;
     box-shadow: none;
-    background-color: rgba(255, 255, 255, 0);
+    background-color: rgb(255, 255, 255);
     transition: box-shadow 1s, background-color 1s;
     .left {
       width: 120px;

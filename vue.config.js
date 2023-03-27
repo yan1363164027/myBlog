@@ -6,6 +6,18 @@ function resolve(dir) {
 module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
+  devServer: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:3001", // 目标地址
+        pathRewrite: {
+          "^/api": "",
+        },
+        ws: true, // 用于支持websocket
+        changeOrigin: true,
+      },
+    }
+  },
   chainWebpack: (config) => {
     config.module.rules.delete("svg"); // 重点:删除默认配置中处理svg
     config.module
@@ -32,5 +44,12 @@ module.exports = defineConfig({
       .options({
         raw: true,
       });
+    config.resolve.alias
+      .set("@", resolve("src"))
+    // .set("@assets", resolve("src/assets"))
+    // .set("@components", resolve("src/components"))
+    // .set("@base", resolve("baseConfig"))
+    // .set("@public", resolve("public"));
+
   },
 });

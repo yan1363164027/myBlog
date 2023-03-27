@@ -43,7 +43,7 @@ export default {
       }
     };
 
-    return { toBlog, ...toRefs(props) };
+    return { toBlog };
   },
 };
 </script>
