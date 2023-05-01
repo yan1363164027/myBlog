@@ -1,5 +1,5 @@
 <template>
-  <div class="article-main">
+  <div class="article-main" :style="`margin: ${marginInfo}px;`">
       <div class="content left right">
         <h3>
           <div class="releaseTime">发布时间：{{ articleDetail.rlseTime }}</div>
@@ -31,7 +31,7 @@
             </el-tooltip>
           </div>
         </h3>
-        <h2>{{ articleDetail.title }}</h2>
+        <h2 :title="articleDetail.title">{{ articleDetail.title }}</h2>
         <h3>{{ articleDetail.tag }}</h3>
         <div class="brief-introduction">
           {{ articleDetail.briefIntroduction }}
@@ -53,6 +53,10 @@ const props = defineProps({
     type: Object,
     default: {},
   },
+  marginInfo: {
+    type: Number,
+    default: 20
+  }
 });
 function toChange() {
   router.push({
@@ -119,9 +123,8 @@ function toBlogDetail() {
 <style lang="less" scoped>
 .article-main {
   position: relative;
-  width: 90%;
-  height: 300px;
-  // background-color: #bfa;
+  min-height: 280px;
+  background-color: #fff;
   border-radius: 10px;
   display: flex;
   justify-content: space-between;
@@ -129,10 +132,10 @@ function toBlogDetail() {
   box-shadow: 0 1px 20px -8px rgb(0 0 0 / 50%);
   .image {
     width: 425px;
-    height: 300px;
+    height: 280px;
     overflow: hidden;
     img {
-      height: 300px;
+      height: 280px;
       transition: transform 0.5s ease-in-out;
     }
     img:hover {
@@ -140,7 +143,7 @@ function toBlogDetail() {
     }
   }
   .content {
-    padding: 10px 20px;
+    padding: 0px 20px;
 
     h3 {
       display: flex;
@@ -148,13 +151,16 @@ function toBlogDetail() {
     }
     h2 {
       margin: 10px 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     h2:hover {
       color: rgb(254, 150, 0);
       cursor: pointer;
     }
     width: 500px;
-    height: 300px;
+    height: 280px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
@@ -183,6 +189,8 @@ function toBlogDetail() {
   .right {
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
+    display: flex;
+    justify-content: center;
   }
   .ellipsis {
     text-align: right;

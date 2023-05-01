@@ -8,8 +8,9 @@ const ajaxJSON = (url, method, data, params) => {
       method,
       data,
       params,
-      Headers: {
+      headers: {
         "Content-Type": "application/json;charset=utf-8",
+        Authorization: ('Bearer ' + localStorage.getItem('token')) || ''
       },
     }).then(
       (res) => {
@@ -32,8 +33,9 @@ const ajax = (url, method, data, params) => {
       method,
       data,
       params,
-      Headers: {
+      headers: {
         "Content-Type": "application/x-www-form-unlencoded",
+        Authorization: ('Bearer ' + localStorage.getItem('token')) || ''
       },
     }).then(
       (res) => {
@@ -49,7 +51,23 @@ const ajax = (url, method, data, params) => {
     );
   });
 };
-
-export function getValidateNumer({url, method, data}){
-    return ajax(url, method, data)
+// 获取验证码
+export function getValidateNumer({ method, data }) {
+  return ajax('/sendsms', method, data)
+}
+// 用户注册
+export function registerUser({ method, data }) {
+  return ajax('/register', method, data)
+}
+// 用户登录
+export function loginUser({ method, data }) {
+  return ajax('/login', method, data)
+}
+// 忘记密码
+export function forgetPassword({ method, data }) {
+  return ajax('/forgetPwd', method, data)
+}
+// 获取博客数据列表
+export function getBlogList({ method, data }) {
+  return ajaxJSON(`/getBlogList?tag=${data.tag}`, method)
 }

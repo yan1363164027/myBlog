@@ -1,7 +1,7 @@
 <template>
-  <myHead v-if="hasCookies"> </myHead>
+  <myHead v-show="tokenNotExpred"> </myHead>
   <router-view></router-view>
-  <MyBottom v-if="hasCookies"></MyBottom>
+  <MyBottom v-show="tokenNotExpred"></MyBottom>
 </template>
 <script setup>
 import myHead from "./components/Common/MyHead.vue";
@@ -9,10 +9,10 @@ import MyBottom from "./components/Common/MyBottom.vue";
 import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 const route = useRoute();
-const hasCookies = ref(false);
+const tokenNotExpred = ref(false);
 const getCookies = () => {
   // 回头需要换成token校验，数值存储到sessionStorage/localStorage当中
-  hasCookies.value = document.cookie ? true : false;
+  tokenNotExpred.value = localStorage.getItem('token') ? true : false;
 };
 onMounted(async () => {
   getCookies();
@@ -36,12 +36,14 @@ body {
   width: 100%;
   height: calc(100vh - 1.9rem); //这个页面只有头部,所以将头部的高度减去
   box-sizing: border-box;
-  font-family: "杨任东竹石体";
+  // font-family: "杨任东竹石体";
+  font-family: 宋体;
   font-size: 24px;
   @import url("./assets/css/markdown.less");
 }
 body {
   overflow: scroll;
+  background-color: #F2F3F5;
   &::-webkit-scrollbar {
     width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
     height: 0px;
@@ -69,6 +71,7 @@ body {
 #app {
   position: absolute;
   margin: 0 auto;
+  padding: 0;
   height: auto;
   width: 100vw;
   max-width: 100%;

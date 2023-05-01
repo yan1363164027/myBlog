@@ -8,7 +8,10 @@
         @click="backTop"
       />
     </div>
-    <div :class="scrollTop >= 20 ? 'header scrollTop' : 'header'">
+    <div
+      :class="scrollTop >= 20 ? 'header scrollTop' : 'header'"
+      :style="`${scrollTop >= 20 ? '' : 'background-color: #F2F3F5;'}`"
+    >
       <div class="left"></div>
       <div class="center">
         <myRoute :content="header.center" />
@@ -16,10 +19,28 @@
       <div class="right">
         <myRoute :content="header.right.search" />
         <div @click="changeMode">
-          <svg-icon
-            :iconClass="header.right.changeMode.iconClass"
-            :width="30"
-          ></svg-icon>
+          <el-dropdown trigger="click">
+            <span class="el-dropdown-link">
+              <el-badge :value="2" class="item">
+                <svg-icon
+                  :iconClass="header.right.info.iconClass"
+                  :width="30"
+                ></svg-icon>
+              </el-badge>
+            </span>
+            <template #dropdown>
+              <el-dropdown-menu>
+                <el-dropdown-item class="clearfix">
+                  测试用户1收藏了你的博客
+                  <el-badge class="mark" :value="1" />
+                </el-dropdown-item>
+                <el-dropdown-item class="clearfix">
+                  测试用户2点赞了你的博客
+                  <el-badge class="mark" :value="1" />
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </template>
+          </el-dropdown>
         </div>
         <myRoute :content="header.right.user" />
       </div>
@@ -38,20 +59,20 @@ const header = {
     { id: 1, iconClass: "home", title: "首页", path: "/" },
     { id: 2, iconClass: "wenzhang", title: "博客", path: "/blog" },
     // { id: 3, iconClass: "ziliao", title: "资料", path: null },
-    {
-      id: 4,
-      iconClass: "github",
-      title: "github",
-      path: null,
-      url: "https://github.com/yan1363164027?tab=repositories",
-    },
-    {
-      id: 5,
-      iconClass: "gitee",
-      title: "gitee",
-      path: null,
-      url: "https://gitee.com/yzx136",
-    },
+    // {
+    //   id: 4,
+    //   iconClass: "github",
+    //   title: "github",
+    //   path: null,
+    //   url: "https://github.com/yan1363164027?tab=repositories",
+    // },
+    // {
+    //   id: 5,
+    //   iconClass: "gitee",
+    //   title: "gitee",
+    //   path: null,
+    //   url: "https://gitee.com/yzx136",
+    // },
     {
       id: 6,
       iconClass: "write",
@@ -74,11 +95,12 @@ const header = {
         iconClass: "user",
         width: 35,
         // title: "用户",
+        path: '/userCenter'
       },
     ],
-    changeMode: {
+    info: {
       id: 1,
-      iconClass: "changeMode",
+      iconClass: "information",
       width: 30,
       // title: "用户",
     },
@@ -90,7 +112,7 @@ let headWrapper = null;
 const changeMode = () => {
   theme.value = theme.value === "light" ? "dark" : "light";
   console.log(99999);
-  appContext.$mitt.emit("changeMode", theme.value);
+  // appContext.$mitt.emit("changeMode", theme.value);
 };
 onMounted(() => {
   window.onscroll = function () {

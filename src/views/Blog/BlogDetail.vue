@@ -25,12 +25,24 @@
     </div>
     <div class="comment">
       <h2>评论</h2>
-      <el-input
-        v-model="commentInfo"
-        :rows="3"
-        type="textarea"
-        placeholder="文明评论哦！"
-      />
+      <div class="user-self-comment">
+        <div class="comment-content">
+          <div class="current-user">userName</div>
+          <el-input
+            v-model="commentInfo"
+            :autosize="{ minRows: 3, maxRows: 20 }"
+            type="textarea"
+            :placeholder="comPlaceholder"
+          />
+        </div>
+        <div class="publish-comment">
+          <el-button type="primary">发表评论</el-button>
+        </div>
+      </div>
+      <div class="comment-list">
+        <h2>评论列表</h2>
+        <CommentBlogCard :comPlaceholder="comPlaceholder" />
+      </div>
     </div>
   </div>
 </template>
@@ -38,6 +50,7 @@
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import "md-editor-v3/lib/style.css";
+import CommentBlogCard from "@/components/Blog/CommentBlogCard.vue";
 // import { service } from '@/utils/service' 引入请求方法体
 const route = useRoute();
 const data = require("@/assets/articleDetails");
@@ -56,6 +69,7 @@ const icon = reactive({
     }
   },
 });
+const comPlaceholder = "想对他说些什么呀！";
 const commentInfo = ref("");
 // async function getArticleDital () {
 //   const res = await
@@ -74,16 +88,25 @@ onMounted(() => {
 .blog-detail {
   position: relative;
   padding-top: 100px;
-  h1{
-    padding:40px 0;
+  padding: 0 0 40px 0;
+  h1 {
+    padding: 40px 0;
     text-align: center;
   }
-  background: #F2F3F5;
+  background: #f2f3f5;
   .preview-praise,
   .preview-collect {
     position: fixed;
     left: 30px;
     cursor: pointer;
+    z-index: 10;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0px 3px 0 rgb(174, 174, 174);
+    padding: 10px;
   }
   .preview-praise {
     top: 240px;
@@ -103,16 +126,71 @@ onMounted(() => {
   }
   .comment {
     position: relative;
-    width: 1200px;
-    left: 50%;
-    transform: translateX(-50%);
-    padding: 50px 15px;
-    h2{
+    width: 900px;
+    left: 40%;
+    transform: translateX(-40%);
+    margin: 50px 0;
+    padding: 0px 15px 50px;
+    background-color: #fff;
+    border-radius: 4px;
+    h2 {
       padding: 10px 0;
+      font-size: 30px;
     }
-    /deep/ .el-textarea__inner {
+    .user-self-comment {
+      display: flex;
+      flex-direction: column;
+      width: 900px;
+      .comment-content {
+        display: flex;
+        justify-content: space-between;
+        .current-user {
+          position: relative;
+          padding-top: 20px;
+        }
+        .el-textarea {
+          flex: 1;
+          margin-left: 20px;
+          /deep/ .el-textarea__inner {
+            font-size: 24px;
+            &::-webkit-scrollbar-track {
+              border-radius: 4px;
+            }
+            &::-webkit-scrollbar {
+              width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
+              height: 0px;
+            }
+            &::-webkit-scrollbar-thumb {
+              border-radius: 10px;
+              background-color: #84ebef;
+              // background-image: linear-gradient(
+              //   rgba(255, 0, 0, 1) 10%,
+              //   rgb(236, 223, 35) 30%,
+              //   rgba(74, 249, 65, 1) 50%,
+              //   rgb(31, 249, 198) 50%,
+              //   rgba(111, 44, 245, 1) 70%,
+              //   rgb(84, 63, 239) 70%,
+              //   rgba(255, 0, 0, 1) 100%
+              // );
+            }
+            &::-webkit-scrollbar-track {
+              /*滚动条里面轨道*/
+              box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+              background: #ededed;
+              border-radius: 2px;
+            }
+          }
+        }
+      }
+      .publish-comment {
+        padding: 10px 0px;
+        align-self: flex-end;
+      }
+    }
+    .comment-list {
+      padding-left: 100px;
       width: 800px;
-      font-size: 24px;
+      align-self: flex-end;
     }
   }
 }

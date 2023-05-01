@@ -3,8 +3,20 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const routes = [
   {
     path: "/",
-    name: "UserCenter",
-    component: () => import("../views/UserCenter/UserCenter.vue"), // 个人中心
+    name: "index",
+    component: () => import("../views/Home.vue"), // 个人中心
+  },
+  {
+    path: "/search",
+    name: "search",
+    component: () => import("../views/Search/index.vue"), // 登陆
+
+  },
+  {
+    path: "/userCenter",
+    name: "userCenter",
+    component: () => import("../views/UserCenter/UserCenter.vue"), // 登陆
+
   },
   {
     path: "/login",

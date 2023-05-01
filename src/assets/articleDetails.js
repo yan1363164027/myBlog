@@ -71,7 +71,7 @@ export default {
       tag: "前端：Vue2响应式原理",
       briefIntroduction:
         "Vue2响应式原理，其实这个问题也基本上问烂了，但是依旧会有很多的小伙伴对这个不清楚，当然我也是对这个东西不理解的很多，但是现在对他的理解更加深刻了，学习并不是一蹴而就，学习过程需要慢慢来。加油吧，少年！",
-      imgSrc: require("../assets/image/Blog/blog2.webp"),
+      imgSrc: require("../assets/image/Blog/zhai.jpg"),
       flag: true,
       content: '',
       mdSourceCode: ''

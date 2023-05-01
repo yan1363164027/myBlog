@@ -29,7 +29,6 @@ export default {
   max-width:2560px;
   height: 300px;
   left: 50%;
-  margin-top: 100px;
   transform: translateX(-50%);
   .contact {
     display: flex;

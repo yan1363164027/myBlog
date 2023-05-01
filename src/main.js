@@ -7,6 +7,7 @@ import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import "@/assets/css/heightlight.css"; // 代码高亮
 import mitt from "mitt"
+import store from "./store";
 const app = createApp(App)
-app.use(router).component("svg-icon", SvgIcon).use(ElementPlus).mount("#app");
+app.use(router).component("svg-icon", SvgIcon).use(ElementPlus).use(store).mount("#app");
 app.$mitt = mitt()

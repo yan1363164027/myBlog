@@ -9,10 +9,13 @@
         :timestamp="articleDetail.rlseTime"
         placement="top"
       >
-        <BlogCard
-          :articleDetail="articleDetail"
-          @click="jumpDetails(articleDetail)"
-        ></BlogCard>
+        <el-card>
+          <BlogCard
+            :articleDetail="articleDetail"
+            @click="jumpDetails(articleDetail)"
+            :marginInfo="0"
+          ></BlogCard>
+        </el-card>
       </el-timeline-item>
     </el-timeline>
   </div>
@@ -21,7 +24,7 @@
 <script>
 // import { Tileline } from "element-plus";
 import { onMounted, reactive, ref, toRefs } from "vue";
-import BlogCard from "@/components/UserCenter/DetailBlogCard.vue";
+import BlogCard from "@/components/Blog/DetailBlogCard.vue";
 export default {
   name: "Blog",
   components: {
@@ -54,6 +57,7 @@ export default {
   width: 100%;
   height: auto;
   background: url("@/assets/image/timeLine.jpg") no-repeat fixed;
+
   .el-timeline {
     width: 1000px;
     margin: 0 auto;
@@ -77,6 +81,13 @@ export default {
         }
       }
     }
+  }
+}
+</style>
+<style lang="less">
+.blog-time-line .el-timeline{
+  .el-card .el-card__body {
+    padding: 0;
   }
 }
 </style>

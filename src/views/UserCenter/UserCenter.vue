@@ -11,7 +11,7 @@
           <div class="user-info-top-left-right">
             <div class="user-short-introduce">
               <svg-icon iconClass="shotIntroduce" title="简介"></svg-icon>
-              个性签名：
+              个性简介：
               <span :title="'路漫漫其修远，吾将上下而求索。'"
                 >路漫漫其修远，吾将上下而求索。路漫漫其修远，吾将上下而求索。路漫漫其修远，吾将上下而求索。路漫漫其修远，吾将上下而求索。</span
               >
@@ -34,21 +34,23 @@
                 </div>
               </div>
             </div>
-            <div class="change-userInfo">
+            <div class="change-userInfo" @click="handleDialogShow" v-if="true">
               <svg-icon iconClass="editUserInfo"></svg-icon>
               编辑个人资料
             </div>
+            <!-- <div v-else class="is-concern" @click="handleConcern">
+              <span>{{ isConcern }}</span>
+            </div> -->
           </div>
         </div>
         <div class="user-info-top-right">
-          <h2>个人成就</h2>
-          <h3><svg-icon iconClass="praise-confirm"></svg-icon> 总点赞量 100</h3>
+          <h2>{{ isSelf ? "个人" : "" }}成就</h2>
+          <h3><svg-icon iconClass="praiseConfirm"></svg-icon> 总点赞量 100</h3>
           <h3>
-            <svg-icon iconClass="read-number"></svg-icon> 文章被阅读数量 10000
+            <svg-icon iconClass="readNumber"></svg-icon> 文章被阅读数量 10000
           </h3>
           <h3>
-            <svg-icon iconClass="collect-filled"></svg-icon> 文章被收藏数量
-            20000
+            <svg-icon iconClass="collectFilled"></svg-icon> 文章被收藏数量 20000
           </h3>
           <h3>我的关注 1000</h3>
           <h3>我的粉丝 1000</h3>
@@ -62,7 +64,7 @@
         <el-tabs
           v-model="activeName"
           class="user-center-tabs"
-          @tab-click="handleClick"
+          @tab-click="handleTabClick"
         >
           <el-tab-pane label="文章" name="article">
             <div class="article">
@@ -81,21 +83,108 @@
               </template>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="点赞" name="praise">praise</el-tab-pane>
-          <el-tab-pane label="收藏" name="collect">collect</el-tab-pane>
-          <el-tab-pane label="关注" name="concern">concern</el-tab-pane>
-          <el-tab-pane label="粉丝" name="fans">fans</el-tab-pane>
+          <el-tab-pane label="点赞" name="praise">
+            <div class="article">
+              <!-- <div class="article-head">
+                <svg-icon :iconClass="yezi" :cursor="false"></svg-icon>
+                <span>文章</span>
+              </div> -->
+              <template
+                v-for="(articleDetail, index) in articleDetails"
+                :key="articleDetail.rlseTime"
+              >
+                <BlogCard
+                  :articleDetail="articleDetail"
+                  @click="jumpDetails(articleDetail)"
+                ></BlogCard>
+              </template>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="收藏" name="collect">
+            <div class="article">
+              <!-- <div class="article-head">
+                <svg-icon :iconClass="yezi" :cursor="false"></svg-icon>
+                <span>文章</span>
+              </div> -->
+              <template
+                v-for="(articleDetail, index) in articleDetails.slice(2)"
+                :key="articleDetail.rlseTime"
+              >
+                <BlogCard
+                  :articleDetail="articleDetail"
+                  @click="jumpDetails(articleDetail)"
+                ></BlogCard>
+              </template>
+            </div>
+          </el-tab-pane>
+          <el-tab-pane label="关注" name="concern">
+            <Concern />
+          </el-tab-pane>
+          <el-tab-pane label="粉丝" name="fans">
+            <Fans />
+          </el-tab-pane>
         </el-tabs>
       </div>
     </div>
   </div>
+  <el-dialog v-model="dialogFormVisible" title="修改信息">
+    <el-form :model="form">
+      <el-form-item>
+        <label class="el-form-item__label" style="width: 140px">用户头像</label>
+        <el-upload
+          class="avatar-uploader"
+          action="https://run.mocky.io/v3/9d059bf9-4660-45f2-925d-ce80ad6c4d15"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          v-model="form.userAvatal"
+        >
+          <img v-if="form.imageUrl" :src="form.imageUrl" class="avatar" />
+          <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+        </el-upload>
+      </el-form-item>
+      <el-form-item label="用户名" :label-width="formLabelWidth">
+        <el-input v-model="form.userName" autocomplete="off" maxlength="20" />
+      </el-form-item>
+      <el-form-item label="性别" :label-width="formLabelWidth">
+        <el-radio-group v-model="form.sex">
+          <el-radio label="男" />
+          <el-radio label="女" />
+          <el-radio label="未知" />
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="个人简介" :label-width="formLabelWidth">
+        <el-input
+          type="textarea"
+          v-model="form.userDesc"
+          maxlength="50"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="github" :label-width="formLabelWidth">
+        <el-input v-model="form.github" maxlength="120"></el-input>
+      </el-form-item>
+      <el-form-item label="wechat" :label-width="formLabelWidth">
+        <el-input v-model="form.wechat" maxlength="120"></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取消</el-button>
+        <el-button type="primary" @click="handleChangeUserInfo = false">
+          确定
+        </el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
 import myRoute from "@/components/Common/MyRoute.vue";
 import Encourage from "@/components/UserCenter/Encourage.vue";
-import BlogCard from "@/components/UserCenter/DetailBlogCard.vue";
-import { useRouter } from "vue-router";
+import BlogCard from "@/components/Blog/DetailBlogCard.vue";
+import Concern from "@/components/UserCenter/Concern.vue";
+import Fans from "@/components/UserCenter/Fans.vue";
+import { useRouter, useRoute } from "vue-router";
+import { Plus } from "@element-plus/icons-vue";
 import { onMounted, reactive, ref } from "vue";
 export default {
   name: "user-center",
@@ -103,17 +192,33 @@ export default {
     myRoute,
     Encourage,
     BlogCard,
+    Plus,
+    Concern,
+    Fans
   },
   setup() {
     const router = useRouter();
+    const route = useRoute();
     const svg = {
-      svgArr: ["gitee", "github", "qq", "weixin"],
+      svgArr: ["github", "weixin"],
       svgIcon: {
         width: 30,
         cursor: true,
       },
     };
+
+    const formLabelWidth = "140px";
+    const isConcern = ref("关注");
     const encourage = "今天又是充满希望的一天！";
+    const dialogFormVisible = ref(false);
+    const form = reactive({
+      imageUrl: "",
+      userName: "",
+      sex: "",
+      userDesc: "",
+      github: "",
+      wechat: "",
+    });
     const blog = reactive({
       myBlogInfo: {
         count: 5,
@@ -123,6 +228,7 @@ export default {
       },
       articleDetails: [],
     });
+    const isSelf = ref(true);
     // 跳转至详情页
     const jumpDetails = (detail) => {
       router.push({
@@ -132,19 +238,45 @@ export default {
         },
       });
     };
-    const handleClick = () => { 
-     
-    }
+    const handleAvatarSuccess = (response, uploadFile) => {
+      console.log("%c Line:177 🥑🥑🥑🥑 response", "color:#ed9ec7", response);
+      imageUrl.value = URL.createObjectURL(uploadFile.raw);
+    };
+    const handleDialogShow = () => {
+      dialogFormVisible.value = true;
+    };
+    const handleConcern = () => {
+      isConcern.value = isConcern.value === "+ 关注" ? "取消关注" : "+ 关注";
+      console.log(
+        "%c Line:203 🧀🧀🧀🧀 isConcern.value",
+        "color:#ed9ec7",
+        isConcern.value
+      );
+    };
+    const handleChangeUserInfo = () => {};
+    const handleTabClick = () => {};
     const activeName = ref("article");
     const yezi = "yezi";
+    const curUserInfo = reactive({});
     onMounted(() => {
+      isSelf.value = false;
       let diff = Date.now() - blog.myBlogInfo.initTime;
       blog.myBlogInfo.time = Math.ceil(diff / (1000 * 3600 * 24));
       const arr = require("../../assets/articleDetails");
       blog.articleDetails.push(...arr.default.arr);
     });
     return {
-      handleClick,
+      form,
+      isSelf,
+      isConcern,
+      curUserInfo,
+      dialogFormVisible,
+      formLabelWidth,
+      handleConcern,
+      handleChangeUserInfo,
+      handleAvatarSuccess,
+      handleDialogShow,
+      handleTabClick,
       activeName,
       encourage,
       ...blog,
@@ -157,6 +289,19 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.avatar-uploader .avatar {
+  width: 120px;
+  height: 120px;
+  display: block;
+}
+.is-concern {
+  width: 150px;
+  height: 36px;
+  border: 2px solid grey;
+  border-radius: 4px;
+  line-height: 36px;
+  cursor: pointer;
+}
 .user-center {
   position: relative;
   background-color: #f2f3f5;
@@ -290,7 +435,7 @@ export default {
         align-items: center;
         .user-concat-detail {
           padding: 5px 0;
-          width: 260px;
+          width: 100px;
           display: flex;
           justify-content: space-around;
         }
@@ -309,8 +454,8 @@ export default {
       align-items: center;
     }
     .user-center-tabs {
-      /deep/ .el-tabs__header{
-        padding:0 60px;
+      /deep/ .el-tabs__header {
+        padding: 0 60px;
       }
       /deep/ .el-tabs__item {
         font-size: 20px;
@@ -329,5 +474,27 @@ export default {
       }
     }
   }
+}
+</style>
+<style lang="less">
+.avatar-uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 120px;
+  height: 120px;
+  text-align: center;
 }
 </style>
