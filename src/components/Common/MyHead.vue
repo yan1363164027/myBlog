@@ -57,7 +57,7 @@ const header = {
   left: {},
   center: [
     { id: 1, iconClass: "home", title: "首页", path: "/" },
-    { id: 2, iconClass: "wenzhang", title: "博客", path: "/blog" },
+    { id: 2, iconClass: "wenzhang", title: "文章列表", path: "/blog" },
     // { id: 3, iconClass: "ziliao", title: "资料", path: null },
     // {
     //   id: 4,
@@ -76,7 +76,7 @@ const header = {
     {
       id: 6,
       iconClass: "write",
-      title: "写博客",
+      title: "发布文章",
       path: "/write",
     },
   ],
@@ -87,6 +87,7 @@ const header = {
         iconClass: "search",
         width: 35,
         // title: "搜索",
+        path: '/search'
       },
     ],
     user: [

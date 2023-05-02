@@ -49,7 +49,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .route {
-  width: 120px;
+  width: 150px;
   margin: 0 5px;
   display: flex;
   justify-content: space-evenly;

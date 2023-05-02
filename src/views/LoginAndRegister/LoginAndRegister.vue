@@ -98,6 +98,18 @@
             v-model="forgetForm.phone"
           ></el-input>
         </el-form-item>
+        <el-form-item label="新密码" prop="newPwd">
+          <div class="validate-code-num">
+            <el-input
+              type="password"
+              minLength="6"
+              maxLength="6"
+              v-model="forgetForm.newPwd"
+              placeholder="请输入新密码"
+              :prefix-icon="Unlock"
+            />
+          </div>
+        </el-form-item>
         <el-form-item label="验证码" prop="verifyCode">
           <div class="validate-code-num">
             <el-input
@@ -153,6 +165,7 @@ const forgetForm = reactive({
   name: "",
   phone: "",
   verifyCode: "",
+  newPwd: "",
 });
 // 表单数据
 const form = reactive({
@@ -180,19 +193,22 @@ const getValidateNum = async (path) => {
   validateText.value = `${validateTime.value}s后重新发送`;
   const params = {
     method: "post",
-    data: { phone: Number(form.phoneNum) },
+    data: { phone: form.phoneNum },
   };
   const result = await getValidateNumer(params);
   forgetCode.value = result.data.code;
 };
 const forgetPwdVerify = async (forgetEl) => {
   if (!forgetEl) return;
-  console.log(11111, "");
-  forgetEl.validate((valid) => {
+  forgetEl.validate(async (valid) => {
     if (valid) {
-      //
-      // const result = await
-      // forgetStatus.value = result
+      const result = await forgetPassword(forgetForm);
+      console.log("%c Line:208 🍿🍿🍿🍿 result", "color:#f5ce50", result);
+      if (result.data) {
+        ElMessage({
+          message: z,
+        });
+      }
     } else {
       return false;
     }
@@ -207,9 +223,9 @@ async function loginFunc() {
     },
   };
   const res = await loginUser(params);
+  localStorage.setItem('userInfo', JSON.stringify(res.data.userInfo))
   return res;
 }
-
 // 注册成功确认登陆跳转至主页面
 const confirmLogin = async () => {
   dialogVisible.value = false;
@@ -279,12 +295,13 @@ const registerSubmit = (formEl) => {
           },
         };
         const res = await registerUser(params);
-        if (res.code === "200" && res.data) {
+        if (res.code == "200" && res.data) {
           dialogVisible.value = true;
+        }else{
           ElMessage({
             message: res.message,
-            type: "success",
-          });
+            taye: 'warning'
+          })
         }
       } else {
         return false;
@@ -348,6 +365,13 @@ const validateForgetForm = {
       callback();
     }
   },
+  validateNewPwd: (rule, value, callback) => {
+    if (value === "") {
+      callback(new Error("新密码不能为空！"));
+    } else {
+      callback();
+    }
+  },
 };
 // 忘记密码校验规则
 const forgetRules = reactive({
@@ -356,6 +380,7 @@ const forgetRules = reactive({
   verifyCode: [
     { validator: validateForgetForm.validateForgetPwd, trigger: "blur" },
   ],
+  newPwd: [{ validator: validateForgetForm.validateNewPwd, trigger: "blur" }],
 });
 // 校验规则
 const rules = reactive({
@@ -368,12 +393,29 @@ function handldForgetPwd() {
   forgetPwd.value = true;
 }
 async function forgetPwdFunc() {
-  // const params = {
-  //   method: "post",
-  //   data: { phone: Number(form.phoneNum) },
-  // };
-  // const result = await getValidateNumer(params);
-  // const res = await forgetPassword()
+  if(forgetForm.phone === '') {
+    ElMessage({
+      type: 'warning',
+      message: '请输入手机号'
+    })
+    return
+  }
+  let timer = setInterval(() => {
+    validateTime.value--;
+    if (validateTime.value === 0) {
+      forgetText.value = "获取验证码";
+      validateTime.value = 60;
+      clearInterval(timer);
+    } else {
+      forgetText.value = `${validateTime.value}s后重新发送`;
+    }
+  }, 1000);
+  forgetText.value = `${validateTime.value}s后重新发送`;
+  const params = {
+    method: "post",
+    data: { phone: forgetForm.phone },
+  };
+  const result = await getValidateNumer(params);
 }
 </script>
 <style lang="less" scoped>

@@ -1,7 +1,7 @@
 <template>
-  <myHead v-show="tokenNotExpred"> </myHead>
+  <myHead v-if="route.fullPath != '/login'"> </myHead>
   <router-view></router-view>
-  <MyBottom v-show="tokenNotExpred"></MyBottom>
+  <MyBottom v-if="route.fullPath != '/login'"></MyBottom>
 </template>
 <script setup>
 import myHead from "./components/Common/MyHead.vue";
@@ -10,12 +10,12 @@ import { useRoute } from "vue-router";
 import { ref, onMounted } from "vue";
 const route = useRoute();
 const tokenNotExpred = ref(false);
-const getCookies = () => {
-  // 回头需要换成token校验，数值存储到sessionStorage/localStorage当中
-  tokenNotExpred.value = localStorage.getItem('token') ? true : false;
-};
+// const getCookies = () => {
+//   // 回头需要换成token校验，数值存储到sessionStorage/localStorage当中
+//   tokenNotExpred.value = localStorage.getItem('token') ? true : false;
+// };
 onMounted(async () => {
-  getCookies();
+  // getCookies();
 });
 </script>
 <style lang="less">

@@ -5,21 +5,21 @@
     </div>
     <div class="blog-right-img">
       <div class="upload-img">
-        <div class="text-tip">自定义博客卡片图片</div>
+        <div class="text-tip">文章卡图片</div>
         <el-upload
           ref="uploadRef"
-          action="#"
           list-type="picture-card"
           :auto-upload="false"
           :limit="1"
           :on-exceed="handleExceed"
+          :on-change="handleChange"
         >
           <el-icon><Plus /></el-icon>
           <template #file="{ file }">
             <div>
               <img
                 class="el-upload-list__item-thumbnail"
-                :src="file.url"
+                :src="dialogImageUrl"
                 alt=""
               />
               <span class="el-upload-list__item-actions">
@@ -51,12 +51,16 @@
           <img w-full :src="dialogImageUrl" alt="Preview Image" />
         </el-dialog>
       </div>
+      <div class="write-desc">
+        <el-input
+          type="textarea"
+          v-model="desc"
+          placeholder="简介"
+          :rows="5"
+        ></el-input>
+      </div>
       <div class="select-tag">
-        <el-select
-          v-model="tagValue"
-          placeholder="选择标签"
-          size="large"
-        >
+        <el-select v-model="tagValue" placeholder="选择标签" size="large">
           <el-option
             v-for="item in options"
             :key="item.value"
@@ -65,7 +69,7 @@
           />
         </el-select>
         <div>
-          <el-button type="primary">发布</el-button>
+          <el-button type="primary" @click="publishArticle">发布</el-button>
         </div>
       </div>
     </div>
@@ -83,14 +87,20 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, reactive, ref } from "vue";
 import { Delete, Download, Plus, ZoomIn } from "@element-plus/icons-vue";
+import { uploadImage, publishAS, getUserInfo } from "@/utils/service/service";
 import MdEditor from "md-editor-v3";
 import "md-editor-v3/lib/style.css";
+import store from "@/store/index";
+import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+const router = useRouter()
 // import service from '@/utils/service'
 const editorRef = ref(null);
 let text = ref(""); // 左侧md内容
 let theme = ref("light");
+const desc = ref("");
 const toolbars = [
   "bold",
   "underline",
@@ -122,34 +132,87 @@ const toolbars = [
   "preview",
   "catalog",
 ];
+async function uploadImgToServer(file) {
+  const formData = new FormData();
+  formData.append("file", file.raw || file);
+  const params = {
+    method: "post",
+    data: formData,
+    headers: {
+      "Content-Type":
+        "multipart/form-data; boundary=----WebKitFormBoundarynl6gT1BKdPWIejNq",
+      Authorization: "Bearer " + localStorage.getItem("token") || "",
+    },
+  };
+  const res = await uploadImage(params);
+  if (res.code == "200") return res;
+}
+
+async function handleChange(file) {
+  const res = await uploadImgToServer(file);
+  dialogImageUrl.value = res.path;
+}
+const userInfo = reactive({})
+async function publishArticle() {
+  console.log(
+    "%c Line:148 🌽🌽🌽🌽 store",
+    "color:#f5ce50",
+    store.state.userInfo
+  );
+  const params = {
+    method: "post",
+    data: {
+      userId: store.state.userInfo.id || userInfo.id,
+      title: blogTitle.value,
+      desc: desc.value,
+      imageUrl: dialogImageUrl.value,
+      tagName: tagValue.value,
+      content: content.value,
+      praiseCount: 0,
+      collectCount: 0,
+      viewCount: 0,
+    },
+  };
+  const res = await publishAS(params);
+  if(res.code == '200' && res.data){
+    ElMessage({
+      message: res.message,
+      type: 'success'
+    })
+    router.push({
+      path: '/',
+    })
+  }
+}
+const content = ref("");
 const uploadRef = ref(null);
 const blogTitle = ref("");
 const dialogImageUrl = ref("");
 const dialogVisible = ref(false);
 const disabled = ref(false);
-const tagValue = ref('')
+const tagValue = ref("");
 const options = [
   {
-    value: '前端',
-    label: '前端',
+    value: "前端",
+    label: "前端",
   },
   {
-    value: '后端',
-    label: '后端',
+    value: "后端",
+    label: "后端",
   },
   {
-    value: '大数据',
-    label: '大数据',
+    value: "大数据",
+    label: "大数据",
   },
   {
-    value: '人工智能',
-    label: '人工智能',
+    value: "人工智能",
+    label: "人工智能",
   },
   {
-    value: '算法',
-    label: '算法',
+    value: "算法",
+    label: "算法",
   },
-]
+];
 const handleRemove = (file) => {
   console.log(file);
 };
@@ -169,7 +232,8 @@ const handleDownload = (file) => {
 //////////////////// markdown编辑器方法如下
 // 获取预览html代码
 function handleHtmlChange(html) {
-  console.log("%c Line:55 🍭🍭🍭🍭 html", "color:#3f7cff", html);
+  console.log("%c Line:200 🥔🥔 html", "color:#b03734", html);
+  content.value = html;
 }
 // 保存
 function handleSave(curText) {
@@ -180,26 +244,21 @@ const onUploadImg = async (files, callback) => {
   const res = await Promise.all(
     files.map((file) => {
       return new Promise((rev, rej) => {
-        const form = new FormData();
-        form.append("file", file);
-
-        axios
-          .post("/api/img/upload", form, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          })
+        uploadImgToServer(file)
           .then((res) => rev(res))
           .catch((error) => rej(error));
       });
     })
   );
-
-  callback(res.map((item) => item.data.url));
+  callback(res.map((item) => item.path));
 };
 
-onMounted(() => {
-  console.log(text);
+onMounted(async () => {
+  userInfo.push(...JSON.parse(localStorage.getItem('userInfo')))
+  const params = {
+    method: 'get',
+  }
+  const res = await getUserInfo()
 });
 </script>
 <style lang="less" scoped>
@@ -235,7 +294,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    .upload-img{
+    .upload-img {
       display: flex;
       align-items: center;
       padding: 20px;
@@ -259,11 +318,17 @@ onMounted(() => {
         width: 100%;
       }
     }
-    .select-tag{
+    .write-desc {
+      .el-textarea {
+        width: 260px;
+        font-size: 18px;
+      }
+    }
+    .select-tag {
       display: flex;
       margin-right: 100px;
       align-items: center;
-      .el-button{
+      .el-button {
         height: 50px;
         width: 100px;
         margin-left: 50px;

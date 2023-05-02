@@ -31,7 +31,6 @@ import VirtualScroll from "@/components/VitualScroll.vue";
 import { getBlogList } from "@/utils/service/service";
 const tempArr = require("@/assets/articleDetails");
 
-const activeIndex = ref(0);
 const navList = [
   "前端",
   "后端",
@@ -43,14 +42,19 @@ const navList = [
   "人工智能",
 ];
 const blogList = reactive([]);
+const params = reactive({
+  content: "",
+  tag: navList[0],
+});
 async function switchNav(index) {
-  activeIndex.value = index;
-  blogList.length = 0;
-  blogList.push(...tempArr.default.arr);
+  params.tag = navList[index];
+  const res = await getBlogList({ method: "get", data: params });
+  console.log("%c Line:52 🍒🍒🍒🍒 res", "color:#465975", res);
 }
+
 onMounted(async () => {
   switchNav(0);
-  const res = await getBlogList({ method: "get", data: { tag: navList[0] } });
+  const res = await getBlogList({ method: "get", data: params });
   console.log("%c Line:54 🍓🍓🍓🍓🍓 res", "color:#fca650", res);
 });
 </script>

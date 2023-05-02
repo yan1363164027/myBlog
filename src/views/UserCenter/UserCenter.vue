@@ -66,23 +66,6 @@
           class="user-center-tabs"
           @tab-click="handleTabClick"
         >
-          <el-tab-pane label="文章" name="article">
-            <div class="article">
-              <!-- <div class="article-head">
-                <svg-icon :iconClass="yezi" :cursor="false"></svg-icon>
-                <span>文章</span>
-              </div> -->
-              <template
-                v-for="(articleDetail, index) in articleDetails"
-                :key="articleDetail.rlseTime"
-              >
-                <BlogCard
-                  :articleDetail="articleDetail"
-                  @click="jumpDetails(articleDetail)"
-                ></BlogCard>
-              </template>
-            </div>
-          </el-tab-pane>
           <el-tab-pane label="点赞" name="praise">
             <div class="article">
               <!-- <div class="article-head">
@@ -255,7 +238,7 @@ export default {
     };
     const handleChangeUserInfo = () => {};
     const handleTabClick = () => {};
-    const activeName = ref("article");
+    const activeName = ref("praise");
     const yezi = "yezi";
     const curUserInfo = reactive({});
     onMounted(() => {
